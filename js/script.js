@@ -25,3 +25,7 @@ document.addEventListener('click', (e) => {
     addBook.close();
   }
 })
+
+document.querySelector('label[for="status-not-finished"]').addEventListener('click', function() {
+  document.getElementById('finished-pages').focus();
+});

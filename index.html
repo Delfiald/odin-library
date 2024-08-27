@@ -68,7 +68,22 @@
                 The Hobbit
               </div>
               <div class="read">
-                <div class="read-indicator"></div>
+                <div class="read-indicator readed"></div>
+                Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator not-readed"></div>
                 Not Read
               </div>
               <button type="button" class="details">
@@ -83,23 +98,8 @@
                 The Hobbit
               </div>
               <div class="read">
-                <div class="read-indicator"></div>
-                Not Read
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator"></div>
-                Not Read
+                <div class="read-indicator unfinished"></div>
+                Not Finished
               </div>
               <button type="button" class="details">
                 Details
@@ -221,11 +221,11 @@
     <dialog class="add-book">
       <form action="">
         <div class="input img">
+          <input type="file" name="cover" id="cover">
           <label for="cover">
             <i class="fas fa-plus"></i>
              Add Cover
           </label>
-          <input type="file" name="cover" id="cover">
         </div>
         <div class="input title">
           <label for="title">Title</label>
@@ -257,7 +257,7 @@
             <div class="status-not-finished">
               <input type="radio" id="status-not-finished" name="reading-status" value="not-finished" required>
               <label for="status-not-finished">Not Finished</label>
-              <input type="number" id="finished-pages" name="finished-pages" placeholder="259">
+              <input type="number" id="finished-pages" name="finished-pages" placeholder="Pages">
             </div>
           </div>
         </div>
@@ -267,6 +267,38 @@
         <button type="submit" class="submit-book">Submit</button>
       </div>
     </dialog>
+
+    <div class="book-details">
+      <div class="book-details-wrapper">
+        <div class="details">
+          <div class="cover">
+            <img src="assets/thehobbit.jpg" alt="Cover">
+          </div>
+          <div></div>
+          <div class="details-content">
+            <div class="title">
+              <h2>
+              The Hobbit
+              </h2>
+            </div>
+            <div class="author">
+              <small>J.R.R. Tolkien</small>
+            </div>
+            <div class="pages">
+              Pages Read
+              <span>259</span> / 259 Pages
+            </div>
+            <div class="details-bottom">
+              Read Status
+              <div class="edit-read-status">
+                Read
+              </div>
+              <div class="confirm button">Confirm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer>
       <div class="socials flex">
