@@ -21,12 +21,259 @@
           <div class="menu-content">
             <a href="#">All Books</a>
             <a href="#">About</a>
-            <a href="#"><i class="fas fa-search"></i></a>
+            <label for="search" class="search">
+              <i class="fas fa-search"></i>
+            </label>
           </div>
         </div>
       </nav>
+      <div class="search-box">
+        <div class="input-wrapper flex">
+          <label for="search">
+            <i class="fas fa-search"></i>
+          </label>
+          <input type="text" id="search" name="search" placeholder="Search Here..">
+          <div class="close button">
+            <i class="fas fa-arrow-up"></i>
+            <i class="fas fa-x"></i>
+          </div>
+        </div>
+      </div>
     </header>
-    <main>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum consequatur voluptatem quod dignissimos, molestiae accusamus doloremque accusantium praesentium! Architecto, et?</main>
+    <main>
+      <section class="p-1">
+        <div class="section-header p-1">
+          <h2>All Books</h2>
+        </div>
+        <div class="section-wrapper p-1">
+          <div class="options">
+            <div class="sort button">
+              <i class="fas fa-arrow-down-wide-short"></i>
+            </div>
+            <div class="filter button">
+              <i class="fas fa-filter"></i>
+              <div class="filter-item flex">
+                <div class="fantasy">Fantasy</div>
+                <div class="biography">Biography</div>
+                <div class="science">Science</div>
+              </div>
+            </div>
+          </div>
+          <div class="section-content">
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+            <div class="card book">
+              <div class="book-cover">
+                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+              </div>
+              <div class="book-title">
+                The Hobbit
+              </div>
+              <div class="read">
+                <div class="read-indicator"></div>
+                Not Read
+              </div>
+              <button type="button" class="details">
+                Details
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="p-1">
+        <div class="section-header p-1">
+          <h2>Completed</h2>
+        </div>
+        <div class="section-wrapper p-1">
+          
+        </div>
+      </section>
+
+      <section class="p-1">
+        <div class="section-header p-1">
+          <h2>Not Read Yet</h2>
+        </div>
+        <div class="section-wrapper p-1">
+          
+        </div>
+      </section>
+
+      <section class="p-1">
+        <div class="section-header p-1">
+          <h2>Unfinished</h2>
+        </div>
+        <div class="section-wrapper p-1">
+          
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <div class="add-book-btn">
+        <i class="fas fa-plus"></i>
+      </div>
+    </aside>
+
+    <dialog class="add-book">
+      <form action="">
+        <div class="input img">
+          <label for="cover">
+            <i class="fas fa-plus"></i>
+             Add Cover
+          </label>
+          <input type="file" name="cover" id="cover">
+        </div>
+        <div class="input title">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" placeholder="Harry Potter">
+        </div>
+        <div class="input author">
+          <label for="author">Author</label>
+          <input type="text" id="author" name="author" placeholder="J.K. Rowling">
+        </div>
+        <div class="input pages">
+          <label for="pages">Pages</label>
+          <div>
+            <input type="number" id="pages" name="pages" placeholder="259">
+            <div>Pages</div>
+          </div>
+        </div>
+        <div class="input read">
+          <div>Read Status</div>
+          <div class="status">
+            <div class="status-read">
+              <input type="radio" id="status-read" name="reading-status" value="read" required>
+              <label for="status-read">Read</label>
+            </div>
+            <div class="status-not-read">
+              <input type="radio" id="status-not-read" name="reading-status" value="not-read" required>
+              <label for="status-not-read">Not Read</label>
+            </div>
+            
+            <div class="status-not-finished">
+              <input type="radio" id="status-not-finished" name="reading-status" value="not-finished" required>
+              <label for="status-not-finished">Not Finished</label>
+              <input type="number" id="finished-pages" name="finished-pages" placeholder="259">
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="dialog-bottom">
+        <button type="button" class="close">Close</button>
+        <button type="submit" class="submit-book">Submit</button>
+      </div>
+    </dialog>
+
+    <footer>
+      <div class="socials flex">
+        <a href="https://github.com/Delfiald" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </footer>
   </div>
   <script src="js/script.js"></script>
 </body>
