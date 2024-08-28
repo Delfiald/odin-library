@@ -624,6 +624,27 @@ aside .add-book-btn:hover {
   border-bottom: none;
 }
 
+.add-book .input.read div:first-child {
+  position: relative;
+}
+
+.add-book .input.read div span {
+  position: absolute;
+  font-size: .75rem;
+  color: var(--not-read-color);
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+}
+
+.add-book .input.read.invalid div span {
+  opacity: 1;
+  visibility: visible;
+}
+
 .add-book .status {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -854,7 +875,7 @@ aside .add-book-btn:hover {
   width: calc(100% - 1rem);
   height: 100%;
   background: #F5F3E7;
-  z-index: 1;
+  z-index: -1;
 }
 
 .book-details-wrapper .details .read-status .set-read-status .set-status > div {
@@ -870,9 +891,7 @@ aside .add-book-btn:hover {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  transition: var(--transition);
-  z-index: 2;
-  background: #F5F3E7 !important;
+  background: #F5F3E7;
   cursor: pointer;
 }
 

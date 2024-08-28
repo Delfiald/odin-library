@@ -41,7 +41,7 @@
       </div>
     </header>
     <main>
-      <section class="p-1">
+      <section class="all-book p-1">
         <div class="section-header p-1">
           <h2>All Books</h2>
         </div>
@@ -69,7 +69,7 @@
               </div>
               <div class="read">
                 <div class="read-indicator readed"></div>
-                Read
+                <span class="status">Read</span>
               </div>
               <button type="button" class="details">
                 Details
@@ -241,33 +241,33 @@
         </div>
         <div class="input title">
           <label for="title">Title</label>
-          <input type="text" id="title" name="title" placeholder="Harry Potter">
+          <input type="text" id="title" name="title" placeholder="Harry Potter" required>
         </div>
         <div class="input author">
           <label for="author">Author</label>
-          <input type="text" id="author" name="author" placeholder="J.K. Rowling">
+          <input type="text" id="author" name="author" placeholder="J.K. Rowling" required>
         </div>
         <div class="input pages">
           <label for="pages">Pages</label>
           <div>
-            <input type="number" id="pages" name="pages" placeholder="259">
+            <input type="number" id="pages" name="pages" placeholder="259" required>
             <div>Pages</div>
           </div>
         </div>
         <div class="input read">
-          <div>Read Status</div>
+          <div>Read Status <span>*At Leat Pick One</span></div>
           <div class="status">
             <div class="status-read">
-              <input type="radio" id="status-read" name="reading-status" value="read" required>
+              <input type="radio" id="status-read" name="status" value="read" required>
               <label for="status-read">Read</label>
             </div>
             <div class="status-not-read">
-              <input type="radio" id="status-not-read" name="reading-status" value="not-read" required>
+              <input type="radio" id="status-not-read" name="status" value="not-read">
               <label for="status-not-read">Not Read</label>
             </div>
             
             <div class="status-not-finished">
-              <input type="radio" id="status-not-finished" name="reading-status" value="not-finished" required>
+              <input type="radio" id="status-not-finished" name="status" value="not-finished">
               <label for="status-not-finished">Not Finished</label>
               <input type="number" id="finished-pages" name="finished-pages" placeholder="Pages">
             </div>
@@ -303,21 +303,24 @@
                   <h2>Finished</h2>
                   <div class="set-status">
                     <div class="set-read">
-                      <input type="radio" name="set-read" id="set-read">
+                      <input type="radio" name="set-read" id="set-read" value="read">
                       <label for="set-read"><div></div></label>
                     </div>
                     <div class="set-notread">
-                      <input type="radio" name="set-read" id="set-notread">
+                      <input type="radio" name="set-read" id="set-notread" value="not-read">
                       <label for="set-notread"><div></div></label>
                     </div>
                     <div class="set-notfinished">
-                      <input type="radio" name="set-read" id="set-notfinished">
+                      <input type="radio" name="set-read" id="set-notfinished" value="not-finished">
                       <label for="set-notfinished"><div></div></label>
                     </div>
                   </div>
                 </div>
                 <p>Last Read:</p>
-                <input type="number" value="259" disabled></input> of 259 Pages
+                <input class="details-current-pages" name="edit-current-pages" type="number" value="259" disabled></input>
+                <div>
+                  of <span class="details-total-pages">259</span> Pages
+                </div>
               </div>
             </div>
             <div class="confirm button">Confirm</div>
