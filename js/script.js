@@ -1,6 +1,9 @@
 const menuBtn = document.querySelector('.menu');
 const searchBox = document.querySelector('.search-box');
 const addBook = document.querySelector('.add-book');
+const bookDetails = document.querySelector('.book-details');
+
+const deleteBook = document.querySelector('.delete-book-confirm');
 
 const searchBoxHandler = (e) => {
   if(e.target.closest('i:first-child')){
@@ -18,11 +21,18 @@ document.addEventListener('click', (e) => {
   }else if(e.target.closest('.search-box .close')){
     searchBoxHandler(e);
   }else if(e.target.closest('.add-book-btn')) {
-    console.log(e.target)
     addBook.showModal();
   }else if(e.target.closest('.add-book .close')){
-    console.log(e.target)
     addBook.close();
+  }else if(e.target.closest('.card .details')){
+    console.log(e.target.closest('.card'));
+    bookDetails.classList.add('show');
+  }else if(e.target.closest('.confirm')) {
+    bookDetails.classList.remove('show');
+  }else if(e.target.closest('.book-details .delete-book')) {
+    deleteBook.classList.add('show');
+  }else if(e.target.closest('.book-details .delete-cancel')) {
+    deleteBook.classList.remove('show');
   }
 })
 
