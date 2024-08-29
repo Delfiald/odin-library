@@ -1,6 +1,7 @@
 const menuBtn = document.querySelector('.menu');
 const searchBox = document.querySelector('.search-box');
 const addBook = document.querySelector('.add-book');
+const inputs = addBook.querySelectorAll('input');
 const bookDetails = document.querySelector('.book-details');
 const addStatusNotFinished = document.querySelector('label[for="status-not-finished"]');
 const deleteBook = document.querySelector('.delete-book-confirm');
@@ -23,6 +24,42 @@ const coverPreview = addBook.querySelector('.input.img');
 const coverInput = coverPreview.querySelector('#cover');
 const coverLabel = document.querySelector('.add-book .input.img label');
 
+const noFeatures = document.querySelector('.no-features');
+
+const myListBook = [];
+
+// Dummy
+myListBook[0] = {
+  author: "J.R.R. Tolkien",
+  currentPages: "293",
+  pages: "293",
+  status: "read",
+  title: "The Hobbit",
+  cover: '../assets/thehobbit.jpg'
+}
+
+// Book Constructor
+function Book (title, author, pages, status) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.status = status;
+  this.currentPages = 0;
+  this.cover = '../assets/no-preview.jpg';
+}
+
+Book.prototype.setCurrentPages = function(currentPages) {
+  this.currentPages = currentPages;
+
+  if(currentPages == this.pages) {
+    this.status = 'read';
+  }
+}
+
+Book.prototype.setCover = function(cover) {
+  this.cover = cover;
+}
+
 let imgList = {}
 
 // Input Image
@@ -34,8 +71,6 @@ const coverInputHandler = () => {
 
     reader.onload = function(event) {
       imgList.imageSrc = event.target.result;
-
-      console.log('read');
 
       coverPreview.style.background = `url(${imgList.imageSrc}) center center / cover no-repeat`;
 
@@ -49,43 +84,6 @@ const coverInputHandler = () => {
   }
 }
 
-// Book Constructor
-const myListBook = [];
-
-// Dummy
-myListBook[0] = {
-  author: "J.R.R. Tolkien",
-  currentPages: "259",
-  pages: "259",
-  status: "read",
-  title: "The Hobbit",
-  cover: '../assets/thehobbit.jpg'
-}
-
-function Book (title, author, pages, status) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.status = status;
-  this.currentPages = 0;
-  this.cover = '../assets/no-preview.jpg';
-}
-
-Book.prototype.setCurrentPages = function(currentPages) {
-  this.currentPages = currentPages;
-
-  console.log(currentPages)
-  console.log(this.pages);
-
-  if(currentPages == this.pages) {
-    this.status = 'read';
-  }
-}
-
-Book.prototype.setCover = function(cover) {
-  this.cover = cover;
-}
-
 // Input Validity Check
 const handleValidity = (item) => {
   let isFinishedInput = false;
@@ -93,7 +91,6 @@ const handleValidity = (item) => {
   if (item.name === 'finished-pages') {
     isFinishedInput = true;
     item.setCustomValidity('');
-    console.log("set");
   }
 
   const isValid = item.reportValidity();
@@ -109,8 +106,28 @@ const handleValidity = (item) => {
   return {isValid: true, isFinishedInput};
 }
 
+const notFinishedInputHandler = (finishedPagesInput, newBook, inputList) => {
+  const finishedPages = parseFloat(inputList['finished-pages']);
+  const totalPages = parseFloat(inputList['pages']);
+  
+  if(inputList['status'] === 'not-finished') {
+    if(finishedPages > totalPages){
+      finishedPagesInput.setCustomValidity(`Please enter a valid page number between 1 and ${totalPages}.`);
+      finishedPagesInput.reportValidity();
+      return false;
+    }else if(finishedPages === 0){
+      newBook.status = 'not-read';
+    }
+    newBook.setCurrentPages(finishedPages);
+  }else if(inputList['status'] === 'read') {
+    newBook.setCurrentPages(totalPages);
+  }
+
+  return true;
+}
+
 // Reset Input
-const resetInput = (inputs) => {
+const resetAddBook = () => {
   inputs.forEach((input) => {
     if(input.type === 'radio'){
       input.checked = false;
@@ -118,19 +135,25 @@ const resetInput = (inputs) => {
       input.value = '';
     }
   })
+
+  imgList = {};
+  if(Object.keys(imgList).length === 0) {
+    coverLabel.classList.remove('hidden');
+  }
+
+  coverPreview.style.background = '';
+  addBook.close();
 }
 
 // Add Book Handler
-const addBookHandler = (e) => {
+const addBookHandler = () => {
   const inputList = {};
-  const inputs = addBook.querySelectorAll('input');
   
   let finishedPagesInput = null;
 
   let isFormValid = true;
-  let i = 0;
   for (let item of inputs) {
-    const {isValid, isFinishedInput} = handleValidity(item, i);
+    const {isValid, isFinishedInput} = handleValidity(item);
     
     if(!isValid){
       isFormValid = false;
@@ -148,89 +171,61 @@ const addBookHandler = (e) => {
 
   if (!isFormValid) {
     return;
-  }
+  }else{
+    // Set Object
+    const newBook = new Book(inputList['title'], inputList['author'], inputList['pages'], inputList['status']);
 
-  const newBook = new Book(inputList['title'], inputList['author'], inputList['pages'], inputList['status']);
-
-  const finishedPages = parseFloat(inputList['finished-pages']);
-  const totalPages = parseFloat(inputList['pages']);
-  
-  if(inputList['status'] === 'not-finished') {
-    if(finishedPages > totalPages || finishedPages === '' || finishedPages === '0'){
-      finishedPagesInput.setCustomValidity(`Please enter a valid page number between 1 and ${totalPages}.`);
-      finishedPagesInput.reportValidity();
+    if(!notFinishedInputHandler(finishedPagesInput, newBook, inputList)){
       return;
     }
-    newBook.setCurrentPages(finishedPages);
-  }else if(inputList['status'] === 'read') {
-    newBook.setCurrentPages(totalPages);
+
+    if(imgList.imageSrc){
+      newBook.setCover(imgList.imageSrc);
+    }
+
+    // Push newBook into Array
+    myListBook.push(newBook);
+
+    resetAddBook();
+
+    showBookHandler();
   }
-
-  if(imgList.imageSrc){
-    newBook.setCover(imgList.imageSrc);
-  }
-
-  coverPreview.style.background = '';
-  imgList = {};
-  if(Object.keys(imgList).length === 0) {
-    coverLabel.classList.remove('hidden');
-  }
-
-  myListBook.push(newBook);
-  resetInput(inputs);
-  addBook.close();
-
-  showBookHandler();
 }
 
 // Section Handler
 const isSectionEmpty = () => {
-  if (finishedBooks.childElementCount === 0) {
-    sectionFinished.classList.add('empty');
-  } else {
-    sectionFinished.classList.remove('empty');
-  }
+  const sections = document.querySelectorAll('section.finished, section.not-read, section.not-finished');
 
-  if (notReadBooks.childElementCount === 0) {
-    console.log("kosong");
-    sectionNotRead.classList.add('empty');
-  } else {
-    sectionNotRead.classList.remove('empty');
-  }
-
-  if (notFinishedBooks.childElementCount === 0) {
-    sectionNotFinished.classList.add('empty');
-  } else {
-    sectionNotFinished.classList.remove('empty');
+  for(let section of sections){
+    if(!section.querySelector('.section-content > div')){
+      section.classList.add('empty');
+    }else{
+      section.classList.remove('empty');
+    }
   }
 }
 
-const sectionHandler = (card, book, index) => {
+const sectionHandler = (card, book) => {
   if(allBook.querySelector('.card.empty')){
     allBook.querySelector('.card.empty').remove();
   }
 
   if(book['status'] === 'read'){
-    console.log('here read')
-    sectionFinished.classList.remove('empty')
     finishedBooks.appendChild(card);
   }
 
   else if(book['status'] === 'not-read'){
-    console.log('here not-read')
-    sectionNotRead.classList.remove('empty')
     notReadBooks.appendChild(card);
   }
 
   else if(book['status'] === 'not-finished'){
-    sectionNotFinished.classList.remove('empty')
     notFinishedBooks.appendChild(card);
   }
 }
 
 // Clone Card
 const cloneCardHandler = () => {
-  const cloneCard = document.importNode(template, true);
+  const cloneCard = template.cloneNode(true);
 
   const cardCover = cloneCard.querySelector('.book-cover img');
   const cardTitle = cloneCard.querySelector('.book-title');
@@ -238,6 +233,25 @@ const cloneCardHandler = () => {
   const readIndicator= cloneCard.querySelector('.read .read-indicator');
 
   return {cloneCard, cardTitle, readStatus, readIndicator, cardCover};
+}
+
+// Set Read Indicator
+const readIndicatorHandler = (readIndicator, read) => {
+  let indicator;
+
+  readIndicator.classList.remove('readed');
+  readIndicator.classList.remove('not-readed');
+  readIndicator.classList.remove('unfinished');
+
+  if(read === 'Read'){
+    indicator = 'readed';
+  }else if(read === 'Not Read'){
+    indicator = 'not-readed'
+  }else if(read === 'Not Finished'){
+    indicator = 'unfinished'
+  }
+
+  readIndicator.classList.add(indicator);
 }
 
 // Add New Book
@@ -264,11 +278,11 @@ const newBookHandler = () => {
     allBook.appendChild(cloneCard);
     sectionHandler(cloneCardForSection, book, index);
   })
+  isSectionEmpty();
 }
 
 // Show Book
 const showBookHandler = () => {
-  isSectionEmpty();
   if(myListBook.length === 0){
     const emptyCard = templateEmpty.cloneNode(true);
     allBook.appendChild(emptyCard);
@@ -278,26 +292,8 @@ const showBookHandler = () => {
   }
 }
 
-// Set Read Indicator
-const readIndicatorHandler = (readIndicator, read) => {
-  let indicator;
-
-  readIndicator.classList.remove('readed');
-  readIndicator.classList.remove('not-readed');
-  readIndicator.classList.remove('unfinished');
-
-  if(read === 'Read'){
-    indicator = 'readed';
-  }else if(read === 'Not Read'){
-    indicator = 'not-readed'
-  }else if(read === 'Not Finished'){
-    indicator = 'unfinished'
-  }
-
-  readIndicator.classList.add(indicator);
-}
-
-// Show Book Detail
+// Get Index
+let activeBook;
 const getCardIndex = (e) => {
   const card = e.target.closest('.card');
   if(!card){
@@ -309,21 +305,8 @@ const getCardIndex = (e) => {
   return bookIndex;
 }
 
-let activeBook;
-
-const bookDetailHandler = (e) => {
-  const bookIndex = getCardIndex(e)
-
-  bookDetails.classList.add('show');
-
-  activeBook = myListBook[bookIndex];
-  
-  bookDetails.querySelector('.cover > img').src = activeBook['cover'];
-  bookDetails.querySelector('.title > *').textContent = activeBook['title'];
-  bookDetails.querySelector('.author > *').textContent = activeBook['author'];
-  bookDetails.querySelector('.read-status .details-current-pages').value = activeBook['currentPages'];
-  bookDetails.querySelector('.read-status .details-total-pages').textContent = activeBook['pages'];
-
+// Edit Details Status
+const detailStatusHandler = () => {
   const detailStatus = bookDetails.querySelectorAll('.set-status input');
 
   const detailStatusText = bookDetails.querySelector('.set-read-status h2');
@@ -331,19 +314,12 @@ const bookDetailHandler = (e) => {
   let isInput;
 
   detailStatus.forEach((input) => {
-    console.log(input.value +" "+activeBook['status']);
     if(input.value == activeBook['status']){
       input.checked = true;
       isInput = input;
     }
   })
 
-  detailStatusHandler(detailStatusText, isInput);
-  detailStatusTextHandler();
-}
-
-// Edit Details Status
-const detailStatusHandler = (detailStatusText, isInput) => {
   if(isInput.value == 'read') {
     detailStatusText.textContent = 'Finished';
   }else if(isInput.value == 'not-read') {
@@ -358,7 +334,7 @@ const detailStatusTextHandler = () => {
 
   const detailText = bookDetails.querySelector('.set-read-status h2');
 
-  const currentPagesInput = bookDetails.querySelector('.details-current-pages');
+  const currentPagesInput = bookDetails.querySelector('#details-current-pages');
   
   isInput.forEach((input) => {
     if (input.checked) {
@@ -376,55 +352,76 @@ const detailStatusTextHandler = () => {
   });
 }
 
+// Book Detail Content
+const setBookDetailContent = () => {
+  bookDetails.querySelector('.cover > img').src = activeBook['cover'];
+  bookDetails.querySelector('.title > *').textContent = activeBook['title'];
+  bookDetails.querySelector('.author > *').textContent = activeBook['author'];
+  bookDetails.querySelector('.read-status #details-current-pages').value = activeBook['currentPages'];
+  bookDetails.querySelector('.read-status .details-total-pages').textContent = activeBook['pages'];
+}
+
+// Show Book Detail
+const bookDetailHandler = (e) => {
+  const bookIndex = getCardIndex(e)
+
+  bookDetails.classList.add('show');
+
+  activeBook = myListBook[bookIndex];
+  
+  setBookDetailContent();
+
+  detailStatusHandler();
+  detailStatusTextHandler();
+}
+
+// CurrentPagesValidation
+const currentPagesValidation = (totalPages, input) => {
+  input.setCustomValidity('');
+  if(!input.reportValidity()){
+    return false
+  }
+
+  if(parseFloat(input.value) > parseFloat(totalPages)){
+    input.setCustomValidity(`Please enter a valid page number between 1 and ${totalPages}.`);
+    input.reportValidity();
+    return false;
+  }else if(parseFloat(input.value) === 0){
+    activeBook['status'] = 'not-read';
+    activeBook['currentPages'] = 0;
+  }else if(parseFloat(input.value) === parseFloat(totalPages)){
+    activeBook['status'] = 'read';
+    activeBook['currentPages'] = activeBook['pages'];
+  }else {
+    activeBook['currentPages'] = input.value;
+  }
+
+  return true;
+}
+
 // Edit Status
 const editStatusHandler = () => {
   const statusActive = bookDetails.querySelectorAll('.set-status input');
-  const currentPagesInput = bookDetails.querySelector('.details-current-pages');
+  const currentPagesInput = bookDetails.querySelector('#details-current-pages');
 
   let valid = true;
 
   for(let radio of statusActive){
     if(radio.checked){
       activeBook['status'] = radio.value;
+      
       if(radio.value == 'not-read') {
         activeBook['currentPages'] = 0;
       }else if(radio.value == 'read') {
         activeBook['currentPages'] = activeBook['pages'];
       }else if(radio.value == 'not-finished') {
-        const isValid = currentPagesValidation(currentPagesInput.value, activeBook['pages'], currentPagesInput);
-        if(isValid === 0){
-          activeBook['status'] = 'not-read';
-          activeBook['currentPages'] = 0;
-        }else if(isValid === 1) {
-          activeBook['status'] = 'read';
-          activeBook['currentPages'] = activeBook['pages'];
-        }else if(isValid != -1){
-          activeBook['currentPages'] = currentPagesInput.value;
-        }else{
-          valid = false;
-          return;
-        }
+        valid = currentPagesValidation(activeBook['pages'], currentPagesInput);
       }
     }
   }
   
   if(valid){
     updateBookCard(activeBook);
-  }
-}
-
-const currentPagesValidation = (currentPages, totalPages, input) => {
-  if(parseFloat(currentPages) > parseFloat(totalPages)){
-    input.setCustomValidity(`Please enter a valid page number between 1 and ${totalPages}.`);
-    input.reportValidity();
-    return -1;
-  }else {
-    input.setCustomValidity('');
-    if(input.value == 0){
-      return 0;
-    }else if(input.value == parseFloat(totalPages)){
-      return 1;
-    }
   }
 }
 
@@ -454,6 +451,7 @@ const updateBookCard = (activeBook) => {
       }
 
       const allBookSection = document.querySelector('.all-book');
+      
       if (!allBookSection.contains(currentCard)) {
         allBookSection.appendChild(currentCard);
       }
@@ -466,7 +464,6 @@ const updateBookCard = (activeBook) => {
   isSectionEmpty();
 
   bookDetails.classList.remove('show');
-  console.log(myListBook);
 }
 
 const deleteBookHandler = () => {
@@ -482,11 +479,14 @@ const deleteBookHandler = () => {
 
   myListBook.splice(index, 1);
 
-  console.log(myListBook);
+  // Close Modal
   deleteBook.classList.remove('show');
   bookDetails.classList.remove('show');
+
+  // Refresh Card also Reset Data-* based on Index
   showBookHandler();
 
+  // Reset Section
   isSectionEmpty();
 }
 
@@ -500,6 +500,7 @@ const searchBoxHandler = (e) => {
   }
 }
 
+// Event Listener
 isInput.forEach((radio) => {
   radio.addEventListener('change', detailStatusTextHandler);
 })
@@ -507,37 +508,41 @@ isInput.forEach((radio) => {
 coverInput.addEventListener('change', coverInputHandler);
 
 document.addEventListener('click', (e) => {
-  if(e.target.closest('.search i')){
+  const target = e.target;
+  if(target.closest('.search i')){
     searchBox.classList.toggle('show');
-  }else if(e.target.closest('.menu .menu-button')){
+  }else if(target.closest('.menu .menu-button')){
     menuBtn.classList.toggle('open');
-  }else if(e.target.closest('.search-box .close')){
+  }else if(target.closest('.search-box .close')){
     searchBoxHandler(e);
-  }else if(e.target.closest('.add-book-btn') || e.target.closest('.card.empty')) {  
+  }else if(target.closest('.add-book-btn') || target.closest('.card.empty')) {  
     addBook.showModal();
-  }else if(e.target.closest('.add-book .close')){
+  }else if(target.closest('.add-book .close')){
     addBook.close();
-  }else if(e.target.closest('.all-book .card .details')){
+  }else if(target.closest('.all-book .card .details')){
     bookDetailHandler(e);
-  }else if(e.target.closest('.finished .card .details')){
+  }else if(target.closest('.finished .card .details')){
     bookDetailHandler(e);
-  }else if(e.target.closest('.not-read .card .details')){
+  }else if(target.closest('.not-read .card .details')){
     bookDetailHandler(e);
-  }else if(e.target.closest('.not-finished .card .details')){
+  }else if(target.closest('.not-finished .card .details')){
     bookDetailHandler(e);
-  }else if(e.target.closest('.confirm')) {
+  }else if(target.closest('.confirm')) {
     editStatusHandler();
-  }else if(e.target.closest('.book-details .delete-book')) {
+  }else if(target.closest('.book-details .delete-book')) {
     deleteBook.classList.add('show');
-  }else if(e.target.closest('.book-details .delete-cancel')) {
+  }else if(target.closest('.book-details .delete-cancel')) {
     deleteBook.classList.remove('show');
-  }else if(e.target.closest('.book-details .delete-confirm')){
+  }else if(target.closest('.book-details .delete-confirm')){
     deleteBookHandler();
-  }else if(e.target.closest('.add-book .submit-book')){
+  }else if(target.closest('.add-book .submit-book')){
     addBookHandler();
-  }else if(e.target.closest('label[for="status-not-finished"]') ){
+  }else if(target.closest('label[for="status-not-finished"]') ){
     document.getElementById('finished-pages').focus();
+  }else if(target.closest('.edit-book') || target.closest('.sort') || target.closest('.filter') || target.closest('.no-features .close') || target.closest('.about-button')){
+    noFeatures.classList.toggle('show');
   }
 })
 
+// Initialize Dummy Book
 showBookHandler();
