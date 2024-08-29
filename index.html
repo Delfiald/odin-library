@@ -60,56 +60,12 @@
             </div>
           </div>
           <div class="section-content">
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator readed"></div>
-                <span class="status">Read</span>
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
-            <div class="card book book-2">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator not-readed"></div>
-                Not Read
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator unfinished"></div>
-                Not Finished
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
+            
           </div>
         </div>
       </section>
 
-      <section class="p-1">
+      <section class="finished p-1">
         <div class="section-header p-1">
           <h2>Finished</h2>
         </div>
@@ -128,26 +84,11 @@
             </div>
           </div>
           <div class="section-content">
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator readed"></div>
-                Read
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
           </div>
         </div>
       </section>
 
-      <section class="p-1">
+      <section class="not-read p-1">
         <div class="section-header p-1">
           <h2>Not Read Yet</h2>
         </div>
@@ -166,26 +107,11 @@
             </div>
           </div>
           <div class="section-content">
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator not-readed"></div>
-                Not Read
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
           </div>
         </div>
       </section>
 
-      <section class="p-1">
+      <section class="not-finished p-1">
         <div class="section-header p-1">
           <h2>Not Finished</h2>
         </div>
@@ -204,21 +130,6 @@
             </div>
           </div>
           <div class="section-content">
-            <div class="card book">
-              <div class="book-cover">
-                <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
-              </div>
-              <div class="book-title">
-                The Hobbit
-              </div>
-              <div class="read">
-                <div class="read-indicator unfinished"></div>
-                Not Finished
-              </div>
-              <button type="button" class="details">
-                Details
-              </button>
-            </div>
           </div>
         </div>
       </section>
@@ -353,6 +264,30 @@
       </div>
     </footer>
   </div>
+
+  <template id="card-template">
+    <div class="card book">
+      <div class="book-cover">
+        <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
+      </div>
+      <div class="book-title">
+        The Hobbit
+      </div>
+      <div class="read">
+        <div class="read-indicator readed"></div>
+        <span class="status">Read</span>
+      </div>
+      <button type="button" class="details">
+        Details
+      </button>
+    </div>
+  </template>
+
+  <template id="card-empty">
+    <div class="card empty">
+      <i class="fas fa-plus fa-3x"></i>
+    </div>
+  </template>
   <script src="js/script.js"></script>
 </body>
 </html>

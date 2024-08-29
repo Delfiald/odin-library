@@ -8,6 +8,17 @@ const card = document.querySelector('.card');
 
 const allBook = document.querySelector('.all-book .section-content');
 
+const finishedBooks = document.querySelector('.finished .section-content');
+const notReadBooks = document.querySelector('.not-read .section-content');
+const notFinishedBooks = document.querySelector('.not-finished .section-content');
+
+const sectionFinished = document.querySelector('section.finished');
+const sectionNotRead = document.querySelector('section.not-read');
+const sectionNotFinished = document.querySelector('section.not-finished');
+
+const template = document.getElementById('card-template').content;
+const templateEmpty = document.getElementById('card-empty').content;
+
 const searchBoxHandler = (e) => {
   if(e.target.closest('i:first-child')){
     searchBox.classList.remove('show');
@@ -18,6 +29,15 @@ const searchBoxHandler = (e) => {
 
 // Book Constructor
 const myListBook = [];
+
+// Dummy
+myListBook[0] = {
+  author: "J.R.R. Tolkien",
+  currentPages: "259",
+  pages: "259",
+  status: "read",
+  title: "The Hobbit"
+}
 
 function Book (title, author, pages, status) {
   this.title = title;
@@ -129,19 +149,97 @@ const addBookHandler = (e) => {
   showBookHandler();
 }
 
-// Show Book
-const showBookHandler = () => {
-  const cloneCard = card.cloneNode(true);
+// Section Handler
+const isSectionEmpty = () => {
+  if (finishedBooks.childElementCount === 0) {
+    sectionFinished.classList.add('empty');
+  } else {
+    sectionFinished.classList.remove('empty');
+  }
+
+  if (notReadBooks.childElementCount === 0) {
+    console.log("kosong");
+    sectionNotRead.classList.add('empty');
+  } else {
+    sectionNotRead.classList.remove('empty');
+  }
+
+  if (notFinishedBooks.childElementCount === 0) {
+    sectionNotFinished.classList.add('empty');
+  } else {
+    sectionNotFinished.classList.remove('empty');
+  }
+}
+
+const sectionHandler = (card, book, index) => {
+  if(allBook.querySelector('.card.empty')){
+    allBook.querySelector('.card.empty').remove();
+  }
+
+  if(book['status'] === 'read'){
+    console.log('here read')
+    sectionFinished.classList.remove('empty')
+    finishedBooks.appendChild(card);
+  }
+
+  else if(book['status'] === 'not-read'){
+    console.log('here not-read')
+    sectionNotRead.classList.remove('empty')
+    notReadBooks.appendChild(card);
+  }
+
+  else if(book['status'] === 'not-finished'){
+    sectionNotFinished.classList.remove('empty')
+    notFinishedBooks.appendChild(card);
+  }
+}
+
+// Clone Card
+const cloneCardHandler = () => {
+  const cloneCard = document.importNode(template, true);
+
   const cardTitle = cloneCard.querySelector('.book-title');
   const readStatus = cloneCard.querySelector('.read .status');
   const readIndicator= cloneCard.querySelector('.read .read-indicator');
-  myListBook.forEach((book) => {
+
+  return {cloneCard, cardTitle, readStatus, readIndicator};
+}
+
+// Add New Book
+const newBookHandler = () => {
+  allBook.innerHTML = '';
+  finishedBooks.innerHTML = '';
+  notReadBooks.innerHTML = '';
+  notFinishedBooks.innerHTML = '';
+
+  myListBook.forEach((book, index) => {
+    const {cloneCard, cardTitle, readStatus, readIndicator} = cloneCardHandler();
+
     cardTitle.textContent = book['title'];
     readStatus.textContent = book['status'].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     readIndicatorHandler(readIndicator, readStatus.textContent);
 
+    const card = cloneCard.querySelector('.card');
+
+    card.dataset.index = index;
+    
+    const cloneCardForSection = cloneCard.cloneNode(true);
+
     allBook.appendChild(cloneCard);
+    sectionHandler(cloneCardForSection, book, index);
   })
+}
+
+// Show Book
+const showBookHandler = () => {
+  isSectionEmpty();
+  if(myListBook.length === 0){
+    const emptyCard = templateEmpty.cloneNode(true);
+    allBook.appendChild(emptyCard);
+  }
+  else{
+    newBookHandler();
+  }
 }
 
 // Set Read Indicator
@@ -164,15 +262,27 @@ const readIndicatorHandler = (readIndicator, read) => {
 }
 
 // Show Book Detail
+const getCardIndex = (e) => {
+  const card = e.target.closest('.card');
+  if(!card){
+    return {card: null, bookIndex: -1};
+  }
+
+  const bookIndex = card.dataset.index;
+
+  return {card, bookIndex};
+}
+
 let activeBook;
 
 const bookDetailHandler = (e) => {
-  const card = e.target.closest('.all-book .card');
-  const bookIndex = Array.from(document.querySelectorAll('.all-book .card')).indexOf(card);
+  const {card, bookIndex} = getCardIndex(e)
+
+  console.log(bookIndex);
 
   bookDetails.classList.add('show');
 
-  activeBook = myListBook[bookIndex - 3];
+  activeBook = myListBook[bookIndex];
   
   bookDetails.querySelector('.title > *').textContent = activeBook['title'];
   bookDetails.querySelector('.author > *').textContent = activeBook['author'];
@@ -279,16 +389,39 @@ const currentPagesValidation = (currentPages, totalPages, input) => {
 const updateBookCard = (activeBook) => {
   const index = myListBook.findIndex(book => book == activeBook);
 
-  const card = document.querySelectorAll('.all-book .card');
-  
-  currentCard = card[index + 3];
+  const sections = document.querySelectorAll('.all-book, .finished, .not-read, .not-finished');
 
-  const readStatus = currentCard.querySelector('.read .status');
-  const readIndicator= currentCard.querySelector('.read .read-indicator');
+  sections.forEach(section => {
+    const currentCard = section.querySelector(`.card[data-index="${index}"]`);
 
-  readStatus.textContent = activeBook['status'].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    if(currentCard){
+      const readStatus = currentCard.querySelector('.read .status');
+      const readIndicator= currentCard.querySelector('.read .read-indicator');
+    
+      readStatus.textContent = activeBook['status'].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    
+      readIndicatorHandler(readIndicator, readStatus.textContent);
 
-  readIndicatorHandler(readIndicator, readStatus.textContent);
+      let targetSection;
+      if (activeBook.status === "read") {
+        targetSection = finishedBooks;
+      } else if (activeBook.status === "not-read") {
+        targetSection = notReadBooks;
+      } else if (activeBook.status === "not-finished") {
+        targetSection = notFinishedBooks;
+      }
+
+      const allBookSection = document.querySelector('.all-book');
+      if (!allBookSection.contains(currentCard)) {
+        allBookSection.appendChild(currentCard);
+      }
+
+      if (section !== targetSection && section !== allBookSection) {
+        targetSection.appendChild(currentCard);
+      }
+    }
+  })
+  isSectionEmpty();
 
   console.log(myListBook);
 }
@@ -296,16 +429,22 @@ const updateBookCard = (activeBook) => {
 const deleteBookHandler = () => {
   const index = myListBook.findIndex(book => book == activeBook);
 
-  const card = document.querySelectorAll('.all-book .card');
+  const cards = document.querySelectorAll('section .card');
   
-  currentCard = card[index + 3];
+  cards.forEach((card) => {
+    if(card.dataset.index == index){
+      card.remove();
+    }
+  })
 
   myListBook.splice(index, 1);
-  currentCard.remove();
 
   console.log(myListBook);
   deleteBook.classList.remove('show');
   bookDetails.classList.remove('show');
+  showBookHandler();
+
+  isSectionEmpty();
 }
 
 const isInput = bookDetails.querySelectorAll('.set-status input');
@@ -321,11 +460,17 @@ document.addEventListener('click', (e) => {
     menuBtn.classList.toggle('open');
   }else if(e.target.closest('.search-box .close')){
     searchBoxHandler(e);
-  }else if(e.target.closest('.add-book-btn')) {
+  }else if(e.target.closest('.add-book-btn') || e.target.closest('.card.empty')) {
     addBook.showModal();
   }else if(e.target.closest('.add-book .close')){
     addBook.close();
-  }else if(e.target.closest('.card .details')){
+  }else if(e.target.closest('.all-book .card .details')){
+    bookDetailHandler(e);
+  }else if(e.target.closest('.finished .card .details')){
+    bookDetailHandler(e);
+  }else if(e.target.closest('.not-read .card .details')){
+    bookDetailHandler(e);
+  }else if(e.target.closest('.not-finished .card .details')){
     bookDetailHandler(e);
   }else if(e.target.closest('.confirm')) {
     editStatusHandler();
@@ -346,3 +491,6 @@ document.addEventListener('click', (e) => {
 // addStatusNotFinished.addEventListener('click', function() {
 //   document.getElementById('finished-pages').focus();
 // });
+
+// Initialize
+showBookHandler();
