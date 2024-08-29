@@ -270,15 +270,13 @@ const getCardIndex = (e) => {
 
   const bookIndex = card.dataset.index;
 
-  return {card, bookIndex};
+  return bookIndex;
 }
 
 let activeBook;
 
 const bookDetailHandler = (e) => {
-  const {card, bookIndex} = getCardIndex(e)
-
-  console.log(bookIndex);
+  const bookIndex = getCardIndex(e)
 
   bookDetails.classList.add('show');
 
@@ -346,7 +344,9 @@ const editStatusHandler = () => {
   const statusActive = bookDetails.querySelectorAll('.set-status input');
   const currentPagesInput = bookDetails.querySelector('.details-current-pages');
 
-  statusActive.forEach((radio) => {
+  let valid = true;
+
+  for(let radio of statusActive){
     if(radio.checked){
       activeBook['status'] = radio.value;
       if(radio.value == 'not-read') {
@@ -363,12 +363,17 @@ const editStatusHandler = () => {
           activeBook['currentPages'] = activeBook['pages'];
         }else if(isValid != -1){
           activeBook['currentPages'] = currentPagesInput.value;
+        }else{
+          valid = false;
+          return;
         }
       }
     }
-  })
+  }
   
-  updateBookCard(activeBook);
+  if(valid){
+    updateBookCard(activeBook);
+  }
 }
 
 const currentPagesValidation = (currentPages, totalPages, input) => {
@@ -423,6 +428,7 @@ const updateBookCard = (activeBook) => {
   })
   isSectionEmpty();
 
+  bookDetails.classList.remove('show');
   console.log(myListBook);
 }
 
@@ -474,7 +480,6 @@ document.addEventListener('click', (e) => {
     bookDetailHandler(e);
   }else if(e.target.closest('.confirm')) {
     editStatusHandler();
-    bookDetails.classList.remove('show');
   }else if(e.target.closest('.book-details .delete-book')) {
     deleteBook.classList.add('show');
   }else if(e.target.closest('.book-details .delete-cancel')) {
@@ -488,9 +493,4 @@ document.addEventListener('click', (e) => {
   }
 })
 
-// addStatusNotFinished.addEventListener('click', function() {
-//   document.getElementById('finished-pages').focus();
-// });
-
-// Initialize
 showBookHandler();
