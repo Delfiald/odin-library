@@ -6,27 +6,21 @@ const bookDetails = document.querySelector('.book-details');
 const addStatusNotFinished = document.querySelector('label[for="status-not-finished"]');
 const deleteBook = document.querySelector('.delete-book-confirm');
 const card = document.querySelector('.card');
-
 const allBook = document.querySelector('.all-book .section-content');
-
 const finishedBooks = document.querySelector('.finished .section-content');
 const notReadBooks = document.querySelector('.not-read .section-content');
 const notFinishedBooks = document.querySelector('.not-finished .section-content');
-
 const sectionFinished = document.querySelector('section.finished');
 const sectionNotRead = document.querySelector('section.not-read');
 const sectionNotFinished = document.querySelector('section.not-finished');
-
 const template = document.getElementById('card-template').content;
 const templateEmpty = document.getElementById('card-empty').content;
-
 const coverPreview = addBook.querySelector('.input.img');
 const coverInput = coverPreview.querySelector('#cover');
-const coverLabel = document.querySelector('.add-book .input.img label');
-
+const coverLabel = coverPreview.querySelector('label');
 const noFeatures = document.querySelector('.no-features');
-
 const myListBook = [];
+const isInput = bookDetails.querySelectorAll('.set-status input');
 
 // Dummy
 myListBook[0] = {
@@ -111,7 +105,7 @@ const notFinishedInputHandler = (finishedPagesInput, newBook, inputList) => {
   const totalPages = parseFloat(inputList['pages']);
   
   if(inputList['status'] === 'not-finished') {
-    if(finishedPages > totalPages){
+    if(finishedPages > totalPages || finishedPagesInput.value == ''){
       finishedPagesInput.setCustomValidity(`Please enter a valid page number between 1 and ${totalPages}.`);
       finishedPagesInput.reportValidity();
       return false;
@@ -489,8 +483,6 @@ const deleteBookHandler = () => {
   // Reset Section
   isSectionEmpty();
 }
-
-const isInput = bookDetails.querySelectorAll('.set-status input');
 
 const searchBoxHandler = (e) => {
   if(e.target.closest('i:first-child')){
