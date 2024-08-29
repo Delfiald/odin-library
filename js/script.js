@@ -35,7 +35,8 @@ const isInput = bookDetails.querySelectorAll('.set-status input');
 const initBook = () => {
   const newBook = new Book('The Hobbit', 'J.R.R. Tolkien', '293', 'read');
   // newBook.setCover('../assets/thehobbit.jpg');
-  newBook.setCover(`${window.location.origin}/assets/thehobbit.jpg`);
+  // newBook.setCover(`${window.location.origin}/assets/thehobbit.jpg`);
+  newBook.setCover('assets/thehobbit.jpg');
   newBook.setCurrentPages(293);
 
   myListBook.push(newBook);
@@ -51,7 +52,8 @@ function Book (title, author, pages, status) {
   this.status = status;
   this.currentPages = 0;
   // this.cover = '../assets/no-preview.jpg';
-  this.cover = `${window.location.origin}/assets/no-preview.jpg`;
+  // this.cover = `${window.location.origin}/assets/no-preview.jpg`;
+  this.cover = 'assets/no-preview.jpg';
 }
 
 Book.prototype.setCurrentPages = function(currentPages) {
