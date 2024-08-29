@@ -19,11 +19,33 @@ const sectionNotFinished = document.querySelector('section.not-finished');
 const template = document.getElementById('card-template').content;
 const templateEmpty = document.getElementById('card-empty').content;
 
-const searchBoxHandler = (e) => {
-  if(e.target.closest('i:first-child')){
-    searchBox.classList.remove('show');
-  }else if(e.target.closest('i:last-child')){
-    searchBox.querySelector('input').value = '';
+const coverPreview = addBook.querySelector('.input.img');
+const coverInput = coverPreview.querySelector('#cover');
+const coverLabel = document.querySelector('.add-book .input.img label');
+
+let imgList = {}
+
+// Input Image
+const coverInputHandler = () => {
+  const img = coverInput.files[0];
+
+  if(img) {
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      imgList.imageSrc = event.target.result;
+
+      console.log('read');
+
+      coverPreview.style.background = `url(${imgList.imageSrc}) center center / cover no-repeat`;
+
+      coverLabel.classList.add('hidden');
+
+      coverInput.value = '';
+    }
+    reader.readAsDataURL(img);
+  } else {
+    alert('Please select an image.');
   }
 }
 
@@ -36,7 +58,8 @@ myListBook[0] = {
   currentPages: "259",
   pages: "259",
   status: "read",
-  title: "The Hobbit"
+  title: "The Hobbit",
+  cover: '../assets/thehobbit.jpg'
 }
 
 function Book (title, author, pages, status) {
@@ -45,6 +68,7 @@ function Book (title, author, pages, status) {
   this.pages = pages;
   this.status = status;
   this.currentPages = 0;
+  this.cover = '../assets/no-preview.jpg';
 }
 
 Book.prototype.setCurrentPages = function(currentPages) {
@@ -142,6 +166,16 @@ const addBookHandler = (e) => {
     newBook.setCurrentPages(totalPages);
   }
 
+  if(imgList.imageSrc){
+    newBook.setCover(imgList.imageSrc);
+  }
+
+  coverPreview.style.background = '';
+  imgList = {};
+  if(Object.keys(imgList).length === 0) {
+    coverLabel.classList.remove('hidden');
+  }
+
   myListBook.push(newBook);
   resetInput(inputs);
   addBook.close();
@@ -198,11 +232,12 @@ const sectionHandler = (card, book, index) => {
 const cloneCardHandler = () => {
   const cloneCard = document.importNode(template, true);
 
+  const cardCover = cloneCard.querySelector('.book-cover img');
   const cardTitle = cloneCard.querySelector('.book-title');
   const readStatus = cloneCard.querySelector('.read .status');
   const readIndicator= cloneCard.querySelector('.read .read-indicator');
 
-  return {cloneCard, cardTitle, readStatus, readIndicator};
+  return {cloneCard, cardTitle, readStatus, readIndicator, cardCover};
 }
 
 // Add New Book
@@ -213,8 +248,9 @@ const newBookHandler = () => {
   notFinishedBooks.innerHTML = '';
 
   myListBook.forEach((book, index) => {
-    const {cloneCard, cardTitle, readStatus, readIndicator} = cloneCardHandler();
+    const {cloneCard, cardTitle, readStatus, readIndicator, cardCover} = cloneCardHandler();
 
+    cardCover.src = book['cover'];
     cardTitle.textContent = book['title'];
     readStatus.textContent = book['status'].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     readIndicatorHandler(readIndicator, readStatus.textContent);
@@ -282,6 +318,7 @@ const bookDetailHandler = (e) => {
 
   activeBook = myListBook[bookIndex];
   
+  bookDetails.querySelector('.cover > img').src = activeBook['cover'];
   bookDetails.querySelector('.title > *').textContent = activeBook['title'];
   bookDetails.querySelector('.author > *').textContent = activeBook['author'];
   bookDetails.querySelector('.read-status .details-current-pages').value = activeBook['currentPages'];
@@ -455,9 +492,19 @@ const deleteBookHandler = () => {
 
 const isInput = bookDetails.querySelectorAll('.set-status input');
 
+const searchBoxHandler = (e) => {
+  if(e.target.closest('i:first-child')){
+    searchBox.classList.remove('show');
+  }else if(e.target.closest('i:last-child')){
+    searchBox.querySelector('input').value = '';
+  }
+}
+
 isInput.forEach((radio) => {
   radio.addEventListener('change', detailStatusTextHandler);
 })
+
+coverInput.addEventListener('change', coverInputHandler);
 
 document.addEventListener('click', (e) => {
   if(e.target.closest('.search i')){
@@ -466,7 +513,7 @@ document.addEventListener('click', (e) => {
     menuBtn.classList.toggle('open');
   }else if(e.target.closest('.search-box .close')){
     searchBoxHandler(e);
-  }else if(e.target.closest('.add-book-btn') || e.target.closest('.card.empty')) {
+  }else if(e.target.closest('.add-book-btn') || e.target.closest('.card.empty')) {  
     addBook.showModal();
   }else if(e.target.closest('.add-book .close')){
     addBook.close();

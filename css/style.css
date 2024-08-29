@@ -582,6 +582,7 @@ aside .add-book-btn:hover {
   color: var(--light-200-color);
   overflow: hidden;
   border-radius: 10px;
+  z-index: 1;
 }
 
 .add-book .input.img label {
@@ -600,6 +601,10 @@ aside .add-book-btn:hover {
 .add-book .input.img label:hover {
   background: var(--dark-200-color);
   opacity: .55;
+}
+
+.add-book .input.img label.hidden {
+  opacity: 0;
 }
 
 .add-book .input.img input {
