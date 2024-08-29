@@ -23,13 +23,23 @@ const myListBook = [];
 const isInput = bookDetails.querySelectorAll('.set-status input');
 
 // Dummy
-myListBook[0] = {
-  author: "J.R.R. Tolkien",
-  currentPages: "293",
-  pages: "293",
-  status: "read",
-  title: "The Hobbit",
-  cover: '../assets/thehobbit.jpg'
+// myListBook[0] = {
+//   author: "J.R.R. Tolkien",
+//   currentPages: "293",
+//   pages: "293",
+//   status: "read",
+//   title: "The Hobbit",
+//   cover: '../assets/thehobbit.jpg'
+// }
+
+const initBook = () => {
+  const newBook = new Book('The Hobbit', 'J.R.R. Tolkien', '293', 'read');
+  newBook.setCover('../assets/thehobbit.jpg');
+  newBook.setCurrentPages(293);
+
+  myListBook.push(newBook);
+  
+  showBookHandler();
 }
 
 // Book Constructor
@@ -52,6 +62,10 @@ Book.prototype.setCurrentPages = function(currentPages) {
 
 Book.prototype.setCover = function(cover) {
   this.cover = cover;
+}
+
+Book.prototype.setStatus = function(status) {
+  this.status = status;
 }
 
 let imgList = {}
@@ -308,7 +322,7 @@ const detailStatusHandler = () => {
   let isInput;
 
   detailStatus.forEach((input) => {
-    if(input.value == activeBook['status']){
+    if(input.value == activeBook.status){
       input.checked = true;
       isInput = input;
     }
@@ -348,11 +362,11 @@ const detailStatusTextHandler = () => {
 
 // Book Detail Content
 const setBookDetailContent = () => {
-  bookDetails.querySelector('.cover > img').src = activeBook['cover'];
-  bookDetails.querySelector('.title > *').textContent = activeBook['title'];
-  bookDetails.querySelector('.author > *').textContent = activeBook['author'];
-  bookDetails.querySelector('.read-status #details-current-pages').value = activeBook['currentPages'];
-  bookDetails.querySelector('.read-status .details-total-pages').textContent = activeBook['pages'];
+  bookDetails.querySelector('.cover > img').src = activeBook.cover;
+  bookDetails.querySelector('.title > *').textContent = activeBook.title;
+  bookDetails.querySelector('.author > *').textContent = activeBook.author;
+  bookDetails.querySelector('.read-status #details-current-pages').value = activeBook.currentPages;
+  bookDetails.querySelector('.read-status .details-total-pages').textContent = activeBook.pages;
 }
 
 // Show Book Detail
@@ -381,13 +395,13 @@ const currentPagesValidation = (totalPages, input) => {
     input.reportValidity();
     return false;
   }else if(parseFloat(input.value) === 0){
-    activeBook['status'] = 'not-read';
-    activeBook['currentPages'] = 0;
+    activeBook.setStatus('not-read');
+    activeBook.setCurrentPages(0);
   }else if(parseFloat(input.value) === parseFloat(totalPages)){
-    activeBook['status'] = 'read';
-    activeBook['currentPages'] = activeBook['pages'];
+    activeBook.setStatus('read');
+    activeBook.setCurrentPages(activeBook.pages);
   }else {
-    activeBook['currentPages'] = input.value;
+    activeBook.setCurrentPages(input.value);
   }
 
   return true;
@@ -402,14 +416,14 @@ const editStatusHandler = () => {
 
   for(let radio of statusActive){
     if(radio.checked){
-      activeBook['status'] = radio.value;
+      activeBook.status = radio.value;
       
       if(radio.value == 'not-read') {
-        activeBook['currentPages'] = 0;
+        activeBook.setCurrentPages(0);
       }else if(radio.value == 'read') {
-        activeBook['currentPages'] = activeBook['pages'];
+        activeBook.setCurrentPages(activeBook.pages);
       }else if(radio.value == 'not-finished') {
-        valid = currentPagesValidation(activeBook['pages'], currentPagesInput);
+        valid = currentPagesValidation(activeBook.pages, currentPagesInput);
       }
     }
   }
@@ -431,7 +445,7 @@ const updateBookCard = (activeBook) => {
       const readStatus = currentCard.querySelector('.read .status');
       const readIndicator= currentCard.querySelector('.read .read-indicator');
     
-      readStatus.textContent = activeBook['status'].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      readStatus.textContent = activeBook.status.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
       readIndicatorHandler(readIndicator, readStatus.textContent);
 
@@ -536,5 +550,4 @@ document.addEventListener('click', (e) => {
   }
 })
 
-// Initialize Dummy Book
-showBookHandler();
+initBook();
