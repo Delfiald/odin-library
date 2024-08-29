@@ -8,20 +8,20 @@
   <title>Odin Library</title>
 </head>
 <body>
-  <div class="container">
+  <div class="container flex">
     <header class="m-1 p-1">
       <nav>
         <div class="hero">
           <h1>Odin Library</h1>
         </div>
-        <div class="menu">
+        <div class="menu flex">
           <div class="menu-button">
             <div></div>
           </div>
-          <div class="menu-content">
-            <a href="#">All Books</a>
-            <a href="#">About</a>
-            <label for="search" class="search">
+          <div class="menu-content flex">
+            <a href="#all-book">All Books</a>
+            <a href="#" class="about-button">About</a>
+            <label for="search" class="search flex">
               <i class="fas fa-search"></i>
             </label>
           </div>
@@ -41,12 +41,12 @@
       </div>
     </header>
     <main>
-      <section class="all-book p-1">
-        <div class="section-header p-1">
+      <section class="all-book p-1" id="all-book">
+        <div class="section-header flex p-1">
           <h2>All Books</h2>
         </div>
         <div class="section-wrapper p-1">
-          <div class="options">
+          <div class="options flex">
             <div class="sort button">
               <i class="fas fa-arrow-down-wide-short"></i>
             </div>
@@ -60,17 +60,16 @@
             </div>
           </div>
           <div class="section-content">
-            
           </div>
         </div>
       </section>
 
       <section class="finished p-1">
-        <div class="section-header p-1">
+        <div class="section-header flex p-1">
           <h2>Finished</h2>
         </div>
         <div class="section-wrapper p-1">
-          <div class="options">
+          <div class="options flex">
             <div class="sort button">
               <i class="fas fa-arrow-down-wide-short"></i>
             </div>
@@ -89,11 +88,11 @@
       </section>
 
       <section class="not-read p-1">
-        <div class="section-header p-1">
+        <div class="section-header flex p-1">
           <h2>Not Read Yet</h2>
         </div>
         <div class="section-wrapper p-1">
-          <div class="options">
+          <div class="options flex">
             <div class="sort button">
               <i class="fas fa-arrow-down-wide-short"></i>
             </div>
@@ -112,11 +111,11 @@
       </section>
 
       <section class="not-finished p-1">
-        <div class="section-header p-1">
+        <div class="section-header flex p-1">
           <h2>Not Finished</h2>
         </div>
         <div class="section-wrapper p-1">
-          <div class="options">
+          <div class="options flex">
             <div class="sort button">
               <i class="fas fa-arrow-down-wide-short"></i>
             </div>
@@ -161,7 +160,7 @@
         <div class="input pages">
           <label for="pages">Pages</label>
           <div>
-            <input type="number" id="pages" name="pages" placeholder="259" required>
+            <input type="number" id="pages" name="pages" placeholder="259" required step="1" min="1">
             <div>Pages</div>
           </div>
         </div>
@@ -180,7 +179,7 @@
             <div class="status-not-finished">
               <input type="radio" id="status-not-finished" name="status" value="not-finished">
               <label for="status-not-finished">Not Finished</label>
-              <input type="number" id="finished-pages" name="finished-pages" placeholder="Pages">
+              <input type="number" id="finished-pages" name="finished-pages" placeholder="Pages" step="1" min="0" required>
             </div>
           </div>
         </div>
@@ -228,7 +227,7 @@
                   </div>
                 </div>
                 <p>Last Read:</p>
-                <input class="details-current-pages" name="edit-current-pages" type="number" value="259" disabled></input>
+                <input id="details-current-pages" name="edit-current-pages" type="number" value="259" disabled step="1" min="0"></input>
                 <div>
                   of <span class="details-total-pages">259</span> Pages
                 </div>
@@ -266,7 +265,7 @@
   </div>
 
   <template id="card-template">
-    <div class="card book">
+    <div class="card book flex">
       <div class="book-cover">
         <img src="assets/thehobbit.jpg" alt="The Hobbit Cover">
       </div>
@@ -284,10 +283,15 @@
   </template>
 
   <template id="card-empty">
-    <div class="card empty">
+    <div class="card empty flex">
       <i class="fas fa-plus fa-3x"></i>
     </div>
   </template>
+
+  <div class="no-features flex">
+    <h2>This feature is not available yet</h2>
+    <div class="close button">Close</div>
+  </div>
   <script src="js/script.js"></script>
 </body>
 </html>
