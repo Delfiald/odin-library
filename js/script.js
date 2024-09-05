@@ -44,33 +44,61 @@ const initBook = () => {
   showBookHandler();
 }
 
-// Book Constructor
-function Book (title, author, pages, status) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.status = status;
-  this.currentPages = 0;
-  // this.cover = '../assets/no-preview.jpg';
-  // this.cover = `${window.location.origin}/assets/no-preview.jpg`;
-  this.cover = 'assets/no-preview.jpg';
-}
+class Book{
+  constructor(title, author, pages, status) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.status = status;
+    this.currentPages = 0;
+    this.cover = 'assets/no-preview.jpg';
+  }
 
-Book.prototype.setCurrentPages = function(currentPages) {
-  this.currentPages = currentPages;
+  setCurrentPages(currentPages) {
+    this.currentPages = currentPages;
 
-  if(currentPages == this.pages) {
-    this.status = 'read';
+    if(currentPages == this.pages) {
+      this.status = 'read';
+    }
+  }
+
+  setCover(cover) {
+    this.cover = cover;
+  }
+
+  setStatus(status) {
+    this.status = status;
   }
 }
 
-Book.prototype.setCover = function(cover) {
-  this.cover = cover;
-}
+// ==================Old Constructor==================
+// Book Constructor
+// function Book (title, author, pages, status) {
+//   this.title = title;
+//   this.author = author;
+//   this.pages = pages;
+//   this.status = status;
+//   this.currentPages = 0;
+//   // this.cover = '../assets/no-preview.jpg';
+//   // this.cover = `${window.location.origin}/assets/no-preview.jpg`;
+//   this.cover = 'assets/no-preview.jpg';
+// }
 
-Book.prototype.setStatus = function(status) {
-  this.status = status;
-}
+// Book.prototype.setCurrentPages = function(currentPages) {
+//   this.currentPages = currentPages;
+
+//   if(currentPages == this.pages) {
+//     this.status = 'read';
+//   }
+// }
+
+// Book.prototype.setCover = function(cover) {
+//   this.cover = cover;
+// }
+
+// Book.prototype.setStatus = function(status) {
+//   this.status = status;
+// }
 
 let imgList = {}
 
